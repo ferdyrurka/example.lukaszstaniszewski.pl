@@ -6,6 +6,11 @@
 parameters:
     locale: 'en'
 
+    rabbitmq.host: 'rabbitmq'
+    rabbitmq.port: '5672'
+    rabbitmq.user: 'admin'
+    rabbitmq.pass: 'administrator'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -23,6 +28,14 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    PhpAmqpLib\Connection\AMQPStreamConnection:
+        class: PhpAmqpLib\Connection\AMQPStreamConnection
+        arguments:
+            - '%rabbitmq.host%'
+            - '%rabbitmq.port%'
+            - '%rabbitmq.user%'
+            - '%rabbitmq.pass%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
