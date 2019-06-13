@@ -3,9 +3,9 @@ doctrine:
         driver: 'pdo_pgsql'
         server_version: '11.2'
         charset: UTF8
-            default_table_options:
-                charset: UTF8
-                collate: pl_PL.utf8
+        default_table_options:
+            charset: UTF8
+            collate: pl_PL.utf8
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
