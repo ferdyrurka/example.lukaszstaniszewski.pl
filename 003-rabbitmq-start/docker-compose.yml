@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ./etc/php7.3-app-pgsql
+      dockerfile: php7.3-app-pgsql.Dockerfile
+    image: php7.3-app-pgsql
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - 80:80
+    container_name: 'app-tutorial'
+
+  rabbitmq:
+    image: rabbitmq:3.7.15-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=administrator
+    ports:
+      - '15672:15672'
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    container_name: 'rabbitmq-tutorial'
+
+  database:
+    image: postgres:11.2
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=administrator
+      - POSTGRES_DB=rabbitMQStart
+    volumes:
+      - database:/var/lib/postgresql/data
+    container_name: 'pgsql-tutorial'
+
+
+volumes:
+  database:
+    driver: local
+  rabbitmq:
+    driver: local
+
+networks:
+  database:
+  rabittmq:
