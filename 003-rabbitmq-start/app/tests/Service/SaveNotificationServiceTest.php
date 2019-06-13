@@ -20,6 +20,7 @@ class SaveNotificationServiceTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @throws \App\Exception\NotFullDataInFactoryException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @test
