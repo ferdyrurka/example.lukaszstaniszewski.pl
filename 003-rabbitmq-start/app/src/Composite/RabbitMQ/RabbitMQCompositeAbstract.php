@@ -29,14 +29,15 @@ abstract class RabbitMQCompositeAbstract extends RabbitMQComponentAbstract
     private $rabbitMQConnectService;
 
     /**
-     * RabbitMQComponentAbstract constructor.
+     * RabbitMQCompositeAbstract constructor.
      * @param RabbitMQConnectService $rabbitMQConnectService
+     * @param SplObjectStorage $splObjectStorage
      */
-    public function __construct(RabbitMQConnectService $rabbitMQConnectService)
+    public function __construct(RabbitMQConnectService $rabbitMQConnectService, SplObjectStorage $splObjectStorage)
     {
         $this->rabbitMQConnectService = $rabbitMQConnectService;
         $this->AMQPChannel = $this->rabbitMQConnectService->getChannel();
-        $this->components = new SplObjectStorage();
+        $this->components = $splObjectStorage;
     }
 
     /**
