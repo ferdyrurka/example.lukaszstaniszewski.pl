@@ -15,6 +15,6 @@ class TypeNotificationValidator implements ValidatorInterface
      */
     public static function validate($value): bool
     {
-        return ($value !== 'alert' && $value !== 'new_message');
+        return !($value !== 'alert' && $value !== 'new_message');
     }
 }

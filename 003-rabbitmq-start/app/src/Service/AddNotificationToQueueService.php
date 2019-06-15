@@ -66,7 +66,7 @@ class AddNotificationToQueueService
     private function validateNotification(array $notification): bool
     {
         return (!isset($notification['message'], $notification['type']) ||
-            TypeNotificationValidator::validate($notification['type'])
+            !TypeNotificationValidator::validate($notification['type'])
         );
     }
 }
