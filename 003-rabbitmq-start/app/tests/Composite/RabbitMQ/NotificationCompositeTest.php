@@ -32,17 +32,22 @@ class NotificationCompositeTest extends TestCase
     private $notificationComposite;
 
     /**
+     * @var RabbitMQConnectService
+     */
+    private $rabbitMQConnectService;
+
+    /**
      *
      */
     public function setUp(): void
     {
         $this->sqplObjectStorage = Mockery::mock(SplObjectStorage::class);
-        $rabbitMQConnectService = Mockery::mock(RabbitMQConnectService::class);
-        $rabbitMQConnectService->shouldReceive('getChannel')->once()
+        $this->rabbitMQConnectService = Mockery::mock(RabbitMQConnectService::class);
+        $this->rabbitMQConnectService->shouldReceive('getChannel')->once()
             ->andReturn(Mockery::mock(AMQPChannel::class))
         ;
 
-        $this->notificationComposite = new NotificationComposite($rabbitMQConnectService, $this->sqplObjectStorage);
+        $this->notificationComposite = new NotificationComposite($this->rabbitMQConnectService, $this->sqplObjectStorage);
     }
 
     /**
@@ -89,6 +94,8 @@ class NotificationCompositeTest extends TestCase
         $this->sqplObjectStorage->shouldReceive('current')->once()->andReturn($component);
         $this->sqplObjectStorage->shouldReceive('next')->once();
         $this->sqplObjectStorage->shouldReceive('rewind')->once();
+
+        $this->rabbitMQConnectService->shouldReceive('closeConnection')->once()->withArgs([AMQPChannel::class]);
 
         $this->notificationComposite->runComposite();
     }
