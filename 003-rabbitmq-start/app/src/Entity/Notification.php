@@ -23,14 +23,14 @@ class Notification
     /**
      * @var string|null
      * @ORM\Column(type="string", length=255, nullable=false)
-     * @Assert\Regex()
+     * @Assert\Regex(pattern="/^([A-Z|a-z|0-9| |.|,]){1,255}$/")
      */
     private $message;
 
     /**
      * @var string|null
      * @ORM\Column(type="string", length=32, nullable=false)
-     *
+     * @Assert\NotBlank()
      */
     private $type;
 
