@@ -23,6 +23,8 @@ class NotificationComposite extends RabbitMQCompositeAbstract
         foreach ($this->components as $component) {
             $component->run($this->AMQPChannel);
         }
+
+        $this->closeConnection();
     }
 
     /**
