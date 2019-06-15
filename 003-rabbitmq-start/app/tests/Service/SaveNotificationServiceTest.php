@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace App\Tests\Service;
 
 use App\Entity\Notification;
+use App\Exception\InvalidArgsException;
 use App\Factory\NotificationFactory;
 use App\Repository\NotificationRepository;
 use App\Service\SaveNotificationService;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use \Mockery;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class SaveNotificationServiceTest
@@ -20,22 +22,69 @@ class SaveNotificationServiceTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @throws \App\Exception\NotFullDataInFactoryException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @var NotificationFactory
+     */
+    private $notificationFactory;
+
+    /**
+     * @var NotificationRepository
+     */
+    private $notificationRepository;
+
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @var SaveNotificationService
+     */
+    private $saveNotificationService;
+
+    /**
+     *
+     */
+    protected function setUp(): void
+    {
+        $this->notificationRepository = Mockery::mock(NotificationRepository::class);
+        $this->notificationFactory = Mockery::mock(NotificationFactory::class);
+        $this->validator = Mockery::mock(ValidatorInterface::class);
+
+        $this->saveNotificationService = new SaveNotificationService(
+            $this->notificationRepository,
+            $this->notificationFactory,
+            $this->validator
+        );
+    }
+
+    /**
      * @test
      */
     public function saveOk(): void
     {
-        $notificationRepository = Mockery::mock(NotificationRepository::class);
-        $notificationRepository->shouldReceive('save')->withArgs([Notification::class])->once();
+        $this->notificationRepository->shouldReceive('save')->withArgs([Notification::class])->once();
 
-        $notificationFactory = Mockery::mock(NotificationFactory::class);
-        $notificationFactory->shouldReceive('buildNotification')->once()
+        $this->notificationFactory->shouldReceive('buildNotification')->once()
             ->andReturn(Mockery::mock(Notification::class))
         ;
 
-        $saveNotificationService = new SaveNotificationService($notificationRepository, $notificationFactory);
-        $saveNotificationService->save(\json_encode(['data to create notification']));
+        $this->validator->shouldReceive('validate')->once()->andReturn([]);
+
+        $this->saveNotificationService->save(\json_encode(['data to create notification']));
+    }
+
+    /**
+     * @test
+     */
+    public function validateFailed(): void
+    {
+        $this->notificationFactory->shouldReceive('buildNotification')->once()
+            ->andReturn(Mockery::mock(Notification::class))
+        ;
+
+        $this->validator->shouldReceive('validate')->once()->andReturn(['Failed I search the invalid data']);
+
+        $this->expectException(InvalidArgsException::class);
+        $this->saveNotificationService->save(\json_encode(['data to create notification']));
     }
 }
