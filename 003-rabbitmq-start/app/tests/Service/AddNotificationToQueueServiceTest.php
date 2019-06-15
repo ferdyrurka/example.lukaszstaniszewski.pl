@@ -69,12 +69,12 @@ class AddNotificationToQueueServiceTest extends TestCase
     {
         return [
             [
-                'notifications' => [
+                'notification' => [
                     ['type' => 'alert']
                 ]
             ],
             [
-                'notifications' => [
+                'notification' => [
                     ['message' => 'Hello World']
                 ]
             ]

@@ -25,7 +25,7 @@ class NewNotificationsForm extends AbstractType
     {
         $builder
             ->add('json_data', TextareaType::class, [
-                'label' => 'Write yours notifications',
+                'label' => 'Write yours notification',
                 'attr' => [
                     'height' => '600px',
                     'width' => '100%'
@@ -33,7 +33,7 @@ class NewNotificationsForm extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Json([
-                        'message' => 'Your notifications JSON is invalid!'
+                        'message' => 'Your notification JSON is invalid!'
                     ])
                 ]
             ])
