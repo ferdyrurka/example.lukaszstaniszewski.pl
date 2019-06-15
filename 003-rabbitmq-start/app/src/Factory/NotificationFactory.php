@@ -30,6 +30,8 @@ class NotificationFactory
         $notification = new Notification();
         $notification->setMessage($arrayNotification['message']);
         $notification->setType($arrayNotification['type']);
+
+        return $notification;
     }
 
     /**

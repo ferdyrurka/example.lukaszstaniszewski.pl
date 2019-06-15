@@ -36,7 +36,8 @@ class AlertNotificationComponent extends RabbitMQComponentAbstract
 
         $message = new AMQPMessage(
             \json_encode([
-                'message' => $this->message
+                'message' => $this->message,
+                'type' => 'alert'
             ]),
             ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
         );

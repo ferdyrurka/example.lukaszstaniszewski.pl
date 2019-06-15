@@ -36,7 +36,8 @@ class NewMessageNotificationComponent extends RabbitMQComponentAbstract
 
         $message = new AMQPMessage(
             \json_encode([
-                'message' => $this->message
+                'message' => $this->message,
+                'type' => 'new_message'
             ])
         );
 
