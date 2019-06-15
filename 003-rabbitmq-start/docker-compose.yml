@@ -10,6 +10,9 @@ services:
       - ./app:/var/www/html
     ports:
       - 80:80
+    networks:
+      - rabittmq
+      - database
     container_name: 'app-tutorial'
 
   rabbitmq:
@@ -21,6 +24,8 @@ services:
       - '15672:15672'
     volumes:
       - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - rabittmq
     container_name: 'rabbitmq-tutorial'
 
   database:
@@ -31,6 +36,8 @@ services:
       - POSTGRES_DB=rabbitMQStart
     volumes:
       - database:/var/lib/postgresql/data
+    networks:
+      - database
     container_name: 'pgsql-tutorial'
 
 
