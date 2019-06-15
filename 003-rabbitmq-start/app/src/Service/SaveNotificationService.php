@@ -36,13 +36,15 @@ class SaveNotificationService
     }
 
     /**
-     * @param array $arrayNotification
+     * @param string $jsonNotification
      * @throws \App\Exception\NotFullDataInFactoryException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(array $arrayNotification): void
+    public function save(string $jsonNotification): void
     {
+        $arrayNotification = \json_decode($jsonNotification, true);
+
         $this->notificationRepository->save(
             $this->notificationFactory->buildNotification($arrayNotification)
         );

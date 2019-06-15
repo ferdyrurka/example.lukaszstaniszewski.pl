@@ -36,6 +36,6 @@ class SaveNotificationServiceTest extends TestCase
         ;
 
         $saveNotificationService = new SaveNotificationService($notificationRepository, $notificationFactory);
-        $saveNotificationService->save(['data to create notification']);
+        $saveNotificationService->save(\json_encode(['data to create notification']));
     }
 }
