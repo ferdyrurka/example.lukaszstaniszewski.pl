@@ -9,6 +9,7 @@ use App\Factory\NotificationFactory;
 use App\Repository\NotificationRepository;
 use App\Service\SaveNotificationService;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
 use \Mockery;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -42,10 +43,18 @@ class SaveNotificationServiceTest extends TestCase
     private $saveNotificationService;
 
     /**
+     * @var AMQPMessage
+     */
+    private $AMQPMessage;
+
+    /**
      *
      */
     protected function setUp(): void
     {
+        $this->AMQPMessage = Mockery::mock(AMQPMessage::class);
+        $this->AMQPMessage->body = \json_encode(['data to create notification']);
+
         $this->notificationRepository = Mockery::mock(NotificationRepository::class);
         $this->notificationFactory = Mockery::mock(NotificationFactory::class);
         $this->validator = Mockery::mock(ValidatorInterface::class);
@@ -70,7 +79,7 @@ class SaveNotificationServiceTest extends TestCase
 
         $this->validator->shouldReceive('validate')->once()->andReturn([]);
 
-        $this->saveNotificationService->save(\json_encode(['data to create notification']));
+        $this->saveNotificationService->save($this->AMQPMessage);
     }
 
     /**
@@ -85,6 +94,6 @@ class SaveNotificationServiceTest extends TestCase
         $this->validator->shouldReceive('validate')->once()->andReturn(['Failed I search the invalid data']);
 
         $this->expectException(InvalidArgsException::class);
-        $this->saveNotificationService->save(\json_encode(['data to create notification']));
+        $this->saveNotificationService->save($this->AMQPMessage);
     }
 }

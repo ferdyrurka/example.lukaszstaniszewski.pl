@@ -6,6 +6,7 @@ namespace App\Service;
 use App\Exception\InvalidArgsException;
 use App\Factory\NotificationFactory;
 use App\Repository\NotificationRepository;
+use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -46,15 +47,15 @@ class SaveNotificationService
     }
 
     /**
-     * @param string $jsonNotification
+     * @param AMQPMessage $jsonNotification
      * @throws InvalidArgsException
      * @throws \App\Exception\NotFullDataInFactoryException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(string $jsonNotification): void
+    public function save(AMQPMessage $jsonNotification): void
     {
-        $arrayNotification = \json_decode($jsonNotification, true);
+        $arrayNotification = \json_decode($jsonNotification->body, true);
 
         $notification = $this->notificationFactory->buildNotification($arrayNotification);
 
