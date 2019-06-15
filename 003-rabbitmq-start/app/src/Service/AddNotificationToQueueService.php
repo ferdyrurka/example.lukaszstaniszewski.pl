@@ -7,6 +7,7 @@ use App\Composite\RabbitMQ\NotificationComposite;
 use App\Composite\RabbitMQ\RabbitMQComponentAbstract;
 use App\Exception\InvalidArgsException;
 use App\Factory\NotificationFactory;
+use App\Service\Validator\TypeNotificationValidator;
 
 /**
  * Class AddNotificationToQueueService
@@ -65,7 +66,7 @@ class AddNotificationToQueueService
     private function validateNotification(array $notification): bool
     {
         return (!isset($notification['message'], $notification['type']) ||
-            ($notification['type'] !== 'new_message' && $notification['type'] !== 'alert')
+            TypeNotificationValidator::validate($notification['type'])
         );
     }
 }
