@@ -5,6 +5,7 @@
     "ext-json": "*",
     "ext-xml": "*",
     "ext-iconv": "*",
+    "ext-sockets": "*",
     "doctrine/annotations": "1.6.*",
     "doctrine/dbal": "2.9.*",
     "doctrine/doctrine-bundle": "1.11.*",
