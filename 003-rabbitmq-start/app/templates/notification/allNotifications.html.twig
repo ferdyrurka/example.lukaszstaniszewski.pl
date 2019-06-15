@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <ul>
+    {% for notification in notifications %}
+        <li>Typ: {{ notification.getType() }}</li>
+        <li>Message: {{ notification.getMessage() }}</li>
+        </br>
+    {% endfor %}
+    </ul>
+{% endblock %}
