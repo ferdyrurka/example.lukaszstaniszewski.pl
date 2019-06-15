@@ -60,15 +60,50 @@ class NotificationWorkerConsole extends Command
     public function execute(InputInterface $input, OutputInterface $output): void
     {
         $type = $input->getArgument('type');
-
         if (!TypeNotificationValidator::validate($type)) {
             throw new InvalidArgsException('Undefined type');
         }
 
+        $output->writeln(ucfirst($type) . ' notification worker ready to working');
+        $durable = $this->getDurable($input->getArgument('durable'));
+        $this->consumeChannel($type, $durable);
+
+        while (\count($this->AMQPChannel->callbacks)) {
+            try {
+                $this->AMQPChannel->wait();
+                $output->writeln('I\'m added notification to database!');
+            } catch (\Exception $exception) {
+                $output->writeln('Exception message: ' . $exception->getMessage());
+            }
+        }
+    }
+
+    /**
+     * @param string $durableArgs
+     * @return bool
+     * @throws InvalidArgsException
+     */
+    private function getDurable(string $durableArgs): bool
+    {
+        if ($durableArgs === 'true') {
+            return true;
+        } elseif ($durableArgs === 'false') {
+            return false;
+        }
+
+        throw new InvalidArgsException('Undefined durable');
+    }
+
+    /**
+     * @param string $type
+     * @param bool $durable
+     */
+    private function consumeChannel(string $type, bool $durable): void
+    {
         $this->AMQPChannel->queue_declare(
             $type . '_notification',
             false,
-            (bool) ($input->getArgument('durable') === 'true')
+            $durable
         );
         $this->AMQPChannel->basic_consume(
             $type . '_notification',
@@ -79,16 +114,5 @@ class NotificationWorkerConsole extends Command
             false,
             [$this->saveNotificationService, 'save']
         );
-
-        $output->writeln(ucfirst($type) . ' notification worker ready to working');
-
-        while (\count($this->AMQPChannel->callbacks)) {
-            try {
-                $this->AMQPChannel->wait();
-                $output->writeln('I\'m added notification to database!');
-            } catch (\Exception $exception) {
-                $output->writeln('Exception message: ' . $exception->getMessage());
-            }
-        }
     }
 }
