@@ -32,8 +32,6 @@ class AlertNotificationComponent extends RabbitMQComponentAbstract
      */
     public function run(AMQPChannel $AMQPChannel): void
     {
-        $AMQPChannel->queue_declare('alert_notification', false, true);
-
         $message = new AMQPMessage(
             \json_encode([
                 'message' => $this->message,

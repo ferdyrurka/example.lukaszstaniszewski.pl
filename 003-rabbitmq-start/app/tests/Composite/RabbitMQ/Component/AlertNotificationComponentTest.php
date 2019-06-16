@@ -28,13 +28,6 @@ class AlertNotificationComponentTest extends TestCase
         );
 
         $amqpChannel = Mockery::mock(AMQPChannel::class);
-        $amqpChannel->shouldReceive('queue_declare')->withArgs(
-            [
-                'alert_notification',
-                false,
-                true
-            ]
-        )->once();
         $amqpChannel->shouldReceive('basic_publish')->withArgs(
             [
                 AMQPMessage::class,

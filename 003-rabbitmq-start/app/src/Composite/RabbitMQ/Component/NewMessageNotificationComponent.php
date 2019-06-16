@@ -32,8 +32,6 @@ class NewMessageNotificationComponent extends RabbitMQComponentAbstract
      */
     public function run(AMQPChannel $AMQPChannel): void
     {
-        $AMQPChannel->queue_declare('new_message_notification');
-
         $message = new AMQPMessage(
             \json_encode([
                 'message' => $this->message,

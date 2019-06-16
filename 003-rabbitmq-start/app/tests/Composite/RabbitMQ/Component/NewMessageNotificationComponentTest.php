@@ -24,11 +24,6 @@ class NewMessageNotificationComponentTest extends TestCase
     public function runOk(): void
     {
         $amqpChannel = Mockery::mock(AMQPChannel::class);
-        $amqpChannel->shouldReceive('queue_declare')->withArgs(
-            [
-                'new_message_notification'
-            ]
-        )->once();
         $amqpChannel->shouldReceive('basic_publish')->withArgs(
             [
                 AMQPMessage::class,
